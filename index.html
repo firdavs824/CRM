@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="uz" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduPrime PRO CRM — Boshqaruv Paneli</title>
+  
+  <!-- FontAwesome & Google Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- CSS Styllar -->
+  <link rel="stylesheet" href="css/style.css?v=6.0">
+</head>
+<body>
+
+<div class="app-layout app-container">
+  
+  <!-- ==================== SIDEBAR ==================== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-box">
+        <div class="logo-icon">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <div class="logo-text">
+          <span class="logo-title">EduPrime</span>
+          <span class="logo-pro-badge">PRO CRM</span>
+        </div>
+      </div>
+      <button class="sidebar-mobile-close" id="sidebarMobileCloseBtn" onclick="closeMobileSidebar()" aria-label="Menyuni yopish">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Menyu: Boshqaruv Paneli + 6 ta Sub-Panel -->
+    <nav class="nav-menu">
+      <a class="nav-item active" data-view="bosh-panel" id="nav-bosh-panel" onclick="switchView('bosh-panel')">
+        <i class="fa-regular fa-circle-dot"></i>
+        <span>Boshqaruv Paneli</span>
+      </a>
+
+      <a class="nav-item" data-view="maktab-faoliyati-view" id="nav-maktab-faoliyati" onclick="switchView('maktab-faoliyati-view')">
+        <i class="fa-solid fa-school"></i>
+        <span>Maktab faoliyati</span>
+      </a>
+
+      <a class="nav-item" data-view="3d-gradient-view" id="nav-3d-gradient" onclick="switchView('3d-gradient-view')">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <span>Statistika</span>
+      </a>
+
+      <a class="nav-item" data-view="hisobot-kartasi-view" id="nav-hisobot-kartasi" onclick="switchView('hisobot-kartasi-view')">
+        <i class="fa-solid fa-file-invoice-dollar"></i>
+        <span>To'lovlar</span>
+      </a>
+
+      <a class="nav-item" data-view="maktab-hisoboti-view" id="nav-maktab-hisoboti" onclick="switchView('maktab-hisoboti-view')">
+        <i class="fa-solid fa-users"></i>
+        <span>O'quvchilar ro'yxati</span>
+      </a>
+
+      <a class="nav-item" data-view="hisobotlar-xaritasi-view" id="nav-hisobotlar-xaritasi" onclick="switchView('hisobotlar-xaritasi-view')">
+        <i class="fa-solid fa-sitemap"></i>
+        <span>Repetitorlar</span>
+      </a>
+
+      <a class="nav-item" data-view="hisobotlar-tahlili-view" id="nav-hisobotlar-tahlili" onclick="switchView('hisobotlar-tahlili-view')">
+        <i class="fa-solid fa-chart-column"></i>
+        <span>Sinflar</span>
+      </a>
+    </nav>
+
+    <!-- Sidebar Pastki qismi: Settings -->
+    <div class="sidebar-footer">
+      <a class="settings-link" onclick="openSettingsModal()" id="nav-settings" title="Tizim sozlamalari">
+        <i class="fa-solid fa-gear"></i>
+        <span>Settings</span>
+      </a>
+      <div class="sidebar-footer-actions">
+        <button class="sidebar-action-btn" onclick="toggleTheme()" title="Tun / Kun rejimi">
+          <i class="fa-solid fa-moon"></i> <span>Mavzu (Dark / Light)</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+  
+  <!-- Mobil Menyu Parda (Backdrop) -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeMobileSidebar()"></div>
+
+  <!-- ==================== ASOSIY MAYDON (MAIN CONTENT) ==================== -->
+  <div class="main-wrapper">
+    <!-- Interaktiv Kosmik & Aurora Fon Zarrachalari (Ambient Canvas) -->
+    <canvas id="ambientGlowCanvas" class="ambient-glow-canvas"></canvas>
+    
+    <!-- Topbar (Yuqori panel) -->
+    <header class="topbar">
+      <!-- 1-QATOR: Brand va Asosiy Boshqaruv Tugmalari (Telefon va Planshetda ham to'liq eniga) -->
+      <div class="topbar-row-brand">
+        <div class="brand-block">
+          <div class="brand-logo-icon">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+          <div class="brand-text-wrap">
+            <span class="brand-name">EduPrime</span>
+            <span class="brand-sub">PRO CRM</span>
+          </div>
+        </div>
+
+        <div class="topbar-actions-block">
+          <!-- Jonli Soat & Holat (Desktop/Planshetda) -->
+          <div class="topbar-live-status-pill" id="topbarLivePill" title="Tizim onlayn">
+            <span class="live-status-dot"></span>
+            <span id="liveTimeClock">00:00:00</span>
+          </div>
+
+          <!-- Ovoz FX Tugmasi -->
+          <button class="icon-btn audio-fx-btn active" id="audioToggleBtn" title="Ovoz effektlari" onclick="toggleAudioFX()" aria-label="Ovoz">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+
+          <!-- Mavzu O'zgartirish (Dark / Light) -->
+          <button class="icon-btn" id="themeToggleBtn" title="Mavzu almashtirish" onclick="toggleTheme()" aria-label="Mavzu">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+
+          <!-- Bildirishnomalar -->
+          <button class="icon-btn" title="Bildirishnomalar">
+            <i class="fa-regular fa-bell"></i>
+            <span class="badge-dot"></span>
+          </button>
+
+          <!-- Ustozlar Pilli -->
+          <div class="topbar-pill-badge" title="Faol ustozlar">
+            <i class="fa-solid fa-chalkboard-user"></i>
+            <span>6 ta ustoz</span>
+          </div>
+
+          <!-- Foydalanuvchi Avatari -->
+          <div class="topbar-user-badge" onclick="openSettingsModal()" title="Admin profili">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="Admin" class="topbar-avatar-round">
+          </div>
+
+          <!-- Yagona Gamburger Menyu Tugmasi -->
+          <button class="icon-btn mobile-menu-btn" id="mainMobileMenuBtn" onclick="toggleMobileSidebar()" aria-label="Menyu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 2-QATOR: Sahifa Sarlavhasi (Boshqaruv Paneli) -->
+      <div class="topbar-row-title">
+        <div class="page-title-box">
+          <h1 id="pageTitle">Boshqaruv Paneli</h1>
+          <p id="pageSubtitle">Ziyo Nur Xususiy Maktabi & Repetitorlik Tizimi</p>
+        </div>
+        <div class="global-search-box" id="globalSearchWrapper">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="globalSearchInput" placeholder="O'quvchi yoki to'lov qidirish..." oninput="handleGlobalSearch(this.value)">
+        </div>
+      </div>
+    </header>
+
+    <!-- Asosiy Kontent Bo'limlari -->
+    <main class="content-area">
+
+      <!-- ===================================================================
+           BOSH PANEL: BOSHQARUV PANELI (1-RASMDAGI 6 TA 3D KARTA)
+           =================================================================== -->
+      <section id="bosh-panel" class="view-section active-view">
+        
+        <div class="cards-3d-grid-main">
+          
+          <!-- 1. Maktab faoliyati -->
+          <div class="card-3d card-3d-school" onclick="switchView('maktab-faoliyati-view')" role="button" tabindex="0">
+            <div class="card-spotlight"></div>
+            <div class="card-shimmer-sweep"></div>
+            <div class="card-3d-badge">3D</div>
+            <div class="card-3d-illustration">
+              
+<svg width="112" height="90" viewBox="0 0 120 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="roofGrad1" x1="60" y1="6" x2="60" y2="34" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFD6A5"/>
+      <stop offset="50%" stop-color="#E8A868"/>
+      <stop offset="100%" stop-color="#C6813E"/>
+    </linearGradient>
+    <linearGradient id="pillarGrad1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFF0D4"/>
+      <stop offset="50%" stop-color="#E5AF74"/>
+      <stop offset="100%" stop-color="#B27438"/>
+    </linearGradient>
+    <linearGradient id="wallGrad1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5B3E25"/>
+      <stop offset="100%" stop-color="#362211"/>
+    </linearGradient>
+    <linearGradient id="baseGrad1" x1="60" y1="72" x2="60" y2="92" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ECC499"/>
+      <stop offset="100%" stop-color="#AB6F36"/>
+    </linearGradient>
+  </defs>
+  <g filter="drop-shadow(0px 8px 12px rgba(0,0,0,0.35))">
+    <path d="M60 8L106 32H14L60 8Z" fill="url(#roofGrad1)"/>
+    <path d="M14 32H106V36C106 37.1 105.1 38 104 38H16C14.9 38 14 37.1 14 36V32Z" fill="#C6813E"/>
+    <circle cx="60" cy="24" r="5" fill="#FFE5C4" fill-opacity="0.9"/>
+    
+    <rect x="20" y="38" width="80" height="38" rx="2" fill="url(#wallGrad1)"/>
+    <path d="M52 50C52 45.58 55.58 42 60 42C64.42 42 68 45.58 68 50V76H52V50Z" fill="#1C1108"/>
+    <path d="M54 50C54 46.68 56.68 44 60 44C63.32 44 66 46.68 66 50V76H54V50Z" fill="#D89D5F" fill-opacity="0.35"/>
+    
+    <rect x="23" y="38" width="9" height="38" rx="2" fill="url(#pillarGrad1)"/>
+    <rect x="21" y="37" width="13" height="3" rx="1.5" fill="#FFF0D4"/>
+    <rect x="21" y="73" width="13" height="3" rx="1.5" fill="#A5672E"/>
+
+    <rect x="41" y="38" width="9" height="38" rx="2" fill="url(#pillarGrad1)"/>
+    <rect x="39" y="37" width="13" height="3" rx="1.5" fill="#FFF0D4"/>
+    <rect x="39" y="73" width="13" height="3" rx="1.5" fill="#A5672E"/>
+
+    <rect x="70" y="38" width="9" height="38" rx="2" fill="url(#pillarGrad1)"/>
+    <rect x="68" y="37" width="13" height="3" rx="1.5" fill="#FFF0D4"/>
+    <rect x="68" y="73" width="13" height="3" rx="1.5" fill="#A5672E"/>
+
+    <rect x="88" y="38" width="9" height="38" rx="2" fill="url(#pillarGrad1)"/>
+    <rect x="86" y="37" width="13" height="3" rx="1.5" fill="#FFF0D4"/>
+    <rect x="86" y="73" width="13" height="3" rx="1.5" fill="#A5672E"/>
+
+    <path d="M16 76H104V81C104 81.5 103.5 82 103 82H17C16.5 82 16 81.5 16 81V76Z" fill="url(#baseGrad1)"/>
+    <path d="M12 82H108V88C108 88.5 107.5 89 107 89H13C12.5 89 12 88.5 12 88V82Z" fill="#A5672E"/>
+  </g>
+</svg>
+
+            </div>
+            <h3 class="card-3d-title">Maktab faoliyati</h3>
+          </div>
+
+          <!-- 2. 3D Gradient (O'quv ko'rsatkichlari) -->
+          <div class="card-3d card-3d-gradient" onclick="switchView('3d-gradient-view')" role="button" tabindex="0">
+            <div class="card-spotlight"></div>
+            <div class="card-shimmer-sweep"></div>
+            <div class="card-3d-badge">3D</div>
+            <div class="card-3d-illustration">
+              
+<svg width="112" height="90" viewBox="0 0 120 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="capGradNew" x1="45" y1="12" x2="85" y2="50" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#818CF8"/>
+      <stop offset="50%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#4338CA"/>
+    </linearGradient>
+    <linearGradient id="tasselGradNew" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FDE047"/>
+      <stop offset="100%" stop-color="#EAB308"/>
+    </linearGradient>
+  </defs>
+  <g filter="drop-shadow(0px 8px 12px rgba(0,0,0,0.35))">
+    <path d="M60 16L98 32L60 48L22 32L60 16Z" fill="url(#capGradNew)"/>
+    <path d="M38 39V48C38 54 48 59 60 59C72 59 82 54 82 48V39C75 43 68 45 60 45C52 45 45 43 38 39Z" fill="#3730A3"/>
+    
+    <circle cx="60" cy="32" r="3.5" fill="#FEF08A"/>
+    <path d="M60 32C68 32 75 38 78 50" stroke="url(#tasselGradNew)" stroke-width="3" stroke-linecap="round"/>
+    <rect x="76" y="49" width="5" height="10" rx="2" fill="#FACC15"/>
+  </g>
+</svg>
+
+            </div>
+            <div class="card-3d-title-group">
+              <h3 class="card-3d-title">Statistika</h3>
+              <span class="card-3d-subtitle">O'quv ko'rsatkichlari</span>
+            </div>
+          </div>
+
+          <!-- 3. Hisobot kartasi -->
+          <div class="card-3d card-3d-reportcard" onclick="switchView('hisobot-kartasi-view')" role="button" tabindex="0">
+            <div class="card-spotlight"></div>
+            <div class="card-shimmer-sweep"></div>
+            <div class="card-3d-badge">3D</div>
+            <div class="card-3d-illustration">
+              
+<svg width="100" height="85" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="docGradBlue" x1="20" y1="10" x2="100" y2="90" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#60A5FA"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+    <linearGradient id="foldGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#BFDBFE"/>
+      <stop offset="100%" stop-color="#60A5FA"/>
+    </linearGradient>
+  </defs>
+  <g filter="drop-shadow(0px 8px 14px rgba(0,0,0,0.32))">
+    <path d="M32 14C32 10.6863 34.6863 8 38 8H74L92 26V84C92 87.3137 89.3137 90 86 90H38C34.6863 90 32 87.3137 32 84V14Z" fill="url(#docGradBlue)"/>
+    <path d="M74 8V24C74 25.1046 74.8954 26 76 26H92L74 8Z" fill="url(#foldGrad)"/>
+    <rect x="44" y="42" width="36" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.95"/>
+    <rect x="44" y="53" width="36" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.95"/>
+    <rect x="44" y="64" width="24" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.95"/>
+  </g>
+</svg>
+
+            </div>
+            <h3 class="card-3d-title">To'lovlar</h3>
+          </div>
+
+          <!-- 4. Maktab hisoboti -->
+          <div class="card-3d card-3d-schoolreport" onclick="switchView('maktab-hisoboti-view')" role="button" tabindex="0">
+            <div class="card-spotlight"></div>
+            <div class="card-shimmer-sweep"></div>
+            <div class="card-3d-badge">3D</div>
+            <div class="card-3d-illustration">
+              
+<svg width="112" height="90" viewBox="0 0 120 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="roofGrad1" x1="60" y1="6" x2="60" y2="34" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFD6A5"/>
+      <stop offset="50%" stop-color="#E8A868"/>
+      <stop offset="100%" stop-color="#C6813E"/>
+    </linearGradient>
+    <linearGradient id="pillarGrad1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFF0D4"/>
+      <stop offset="50%" stop-color="#E5AF74"/>
+      <stop offset="100%" stop-color="#B27438"/>
+    </linearGradient>
+    <linearGradient id="wallGrad1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5B3E25"/>
+      <stop offset="100%" stop-color="#362211"/>
+    </linearGradient>
+    <linearGradient id="baseGrad1" x1="60" y1="72" x2="60" y2="92" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ECC499"/>
+      <stop offset="100%" stop-color="#AB6F36"/>
+    </linearGradient>
+  </defs>
+  <g filter="drop-shadow(0px 8px 12px rgba(0,0,0,0.35))">
+    <path d="M60 8L106 32H14L60 8Z" fill="url(#roofGrad1)"/>
+    <path d="M14 32H106V36C106 37.1 105.1 38 104 38H16C14.9 38 14 37.1 14 36V32Z" fill="#C6813E"/>
+    <circle cx="60" cy="24" r="5" fill="#FFE5C4" fill-opacity="0.9"/>
+    
+    <rect x="20" y="38" width="80" height="38" rx="2" fill="url(#wallGrad1)"/>
+    <path d="M52 50C52 45.58 55.58 42 60 42C64.42 42 68 45.58 68 50V76H52V50Z" fill="#1C1108"/>
+    <path d="M54 50C54 46.68 56.68 44 60 44C63.32 44 66 46.68 66 50V76H54V50Z" fill="#D89D5F" fill-opacity="0.35"/>
+    
+    <rect x="23" y="38" width="9" height="38" rx="2" fill="url(#pillarGrad1)"/>
+    <rect x="21" y="37" width="13" height="3" rx="1.5" fill="#FFF0D4"/>
+    <rect x="21" y="73" width="13" height="3" rx="1.5" fill="#A5672E"/>
+
+    <rect x="41" y="38" width="9" height="38" rx="2" fill="url(#pillarGrad1)"/>
+    <rect x="39" y="37" width="13" height="3" rx="1.5" fill="#FFF0D4"/>
+    <rect x="39" y="73" width="13" height="3" rx="1.5" fill="#A5672E"/>
+
+    <rect x="70" y="38" width="9" height="38" rx="2" fill="url(#pillarGrad1)"/>
+    <rect x="68" y="37" width="13" height="3" rx="1.5" fill="#FFF0D4"/>
+    <rect x="68" y="73" width="13" height="3" rx="1.5" fill="#A5672E"/>
+
+    <rect x="88" y="38" width="9" height="38" rx="2" fill="url(#pillarGrad1)"/>
+    <rect x="86" y="37" width="13" height="3" rx="1.5" fill="#FFF0D4"/>
+    <rect x="86" y="73" width="13" height="3" rx="1.5" fill="#A5672E"/>
+
+    <path d="M16 76H104V81C104 81.5 103.5 82 103 82H17C16.5 82 16 81.5 16 81V76Z" fill="url(#baseGrad1)"/>
+    <path d="M12 82H108V88C108 88.5 107.5 89 107 89H13C12.5 89 12 88.5 12 88V82Z" fill="#A5672E"/>
+  </g>
+</svg>
+
+            </div>
+            <h3 class="card-3d-title">O'quvchilar ro'yxati</h3>
+          </div>
+
+          <!-- 5. Hisobotlar xaritasi -->
+          <div class="card-3d card-3d-reportmap" onclick="switchView('hisobotlar-xaritasi-view')" role="button" tabindex="0">
+            <div class="card-spotlight"></div>
+            <div class="card-shimmer-sweep"></div>
+            <div class="card-3d-badge">3D</div>
+            <div class="card-3d-illustration">
+              
+<svg width="100" height="85" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="docGradBlue" x1="20" y1="10" x2="100" y2="90" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#60A5FA"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+    <linearGradient id="foldGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#BFDBFE"/>
+      <stop offset="100%" stop-color="#60A5FA"/>
+    </linearGradient>
+  </defs>
+  <g filter="drop-shadow(0px 8px 14px rgba(0,0,0,0.32))">
+    <path d="M32 14C32 10.6863 34.6863 8 38 8H74L92 26V84C92 87.3137 89.3137 90 86 90H38C34.6863 90 32 87.3137 32 84V14Z" fill="url(#docGradBlue)"/>
+    <path d="M74 8V24C74 25.1046 74.8954 26 76 26H92L74 8Z" fill="url(#foldGrad)"/>
+    <rect x="44" y="42" width="36" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.95"/>
+    <rect x="44" y="53" width="36" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.95"/>
+    <rect x="44" y="64" width="24" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.95"/>
+  </g>
+</svg>
+
+            </div>
+            <h3 class="card-3d-title">Repetitorlar</h3>
+          </div>
+
+          <!-- 6. Hisobotlar tahlili -->
+          <div class="card-3d card-3d-reportanalysis" onclick="switchView('hisobotlar-tahlili-view')" role="button" tabindex="0">
+            <div class="card-spotlight"></div>
+            <div class="card-shimmer-sweep"></div>
+            <div class="card-3d-badge">3D</div>
+            <div class="card-3d-illustration">
+              
+<svg width="100" height="85" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="docGradPurple" x1="20" y1="10" x2="100" y2="90" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#A78BFA"/>
+      <stop offset="100%" stop-color="#6D28D9"/>
+    </linearGradient>
+    <linearGradient id="planeGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FDE047"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+  </defs>
+  <g filter="drop-shadow(0px 8px 14px rgba(0,0,0,0.32))">
+    <path d="M32 14C32 10.6863 34.6863 8 38 8H74L92 26V84C92 87.3137 89.3137 90 86 90H38C34.6863 90 32 87.3137 32 84V14Z" fill="url(#docGradPurple)"/>
+    <path d="M74 8V24C74 25.1046 74.8954 26 76 26H92L74 8Z" fill="#DDD6FE"/>
+    <!-- Paper airplane symbol -->
+    <path d="M46 62L76 44L44 48L46 62Z" fill="#FFFFFF"/>
+    <path d="M46 62L54 55L44 48L46 62Z" fill="#CBD5E1"/>
+    <path d="M54 55L76 44L46 62V71L54 55Z" fill="url(#planeGrad)"/>
+  </g>
+</svg>
+
+            </div>
+            <h3 class="card-3d-title">Sinflar</h3>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ===================================================================
+           SUB-PANEL 1: MAKTAB FAOLIYATI
+           =================================================================== -->
+      <section id="maktab-faoliyati-view" class="view-section">
+        
+        <div class="subpanel-back-bar">
+          <button class="back-to-main-btn" onclick="switchView('bosh-panel')">
+            <i class="fa-solid fa-arrow-left"></i> Boshqaruv Paneliga qaytish
+          </button>
+        </div>
+
+        <!-- 3D Maktab Hero Banner -->
+        <div class="panel-hero-banner hero-school">
+          <div class="hero-3d-illustration">
+            
+<svg width="112" height="90" viewBox="0 0 120 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="roofGrad1" x1="60" y1="6" x2="60" y2="34" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFD6A5"/>
+      <stop offset="50%" stop-color="#E8A868"/>
+      <stop offset="100%" stop-color="#C6813E"/>
+    </linearGradient>
+    <linearGradient id="pillarGrad1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFF0D4"/>
+      <stop offset="50%" stop-color="#E5AF74"/>
+      <stop offset="100%" stop-color="#B27438"/>
+    </linearGradient>
+    <linearGradient id="wallGrad1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5B3E25"/>
+      <stop offset="100%" stop-color="#362211"/>
+    </linearGradient>
+    <linearGradient id="baseGrad1" x1="60" y1="72" x2="60" y2="92" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ECC499"/>
+      <stop offset="100%" stop-color="#AB6F36"/>
+    </linearGradient>
+  </defs>
+  <g filter="drop-shadow(0px 8px 12px rgba(0,0,0,0.35))">
+    <path d="M60 8L106 32H14L60 8Z" fill="url(#roofGrad1)"/>
+    <path d="M14 32H106V36C106 37.1 105.1 38 104 38H16C14.9 38 14 37.1 14 36V32Z" fill="#C6813E"/>
+    <circle cx="60" cy="24" r="5" fill="#FFE5C4" fill-opacity="0.9"/>
+    
+    <rect x="20" y="38" width="80" height="38" rx="2" fill="url(#wallGrad1)"/>
+    <path d="M52 50C52 45.58 55.58 42 60 42C64.42 42 68 45.58 68 50V76H52V50Z" fill="#1C1108"/>
+    <path d="M54 50C54 46.68 56.68 44 60 44C63.32 44 66 46.68 66 50V76H54V50Z" fill="#D89D5F" fill-opacity="0.35"/>
+    
+    <rect x="23" y="38" width="9" height="38" rx="2" fill="url(#pillarGrad1)"/>
+    <rect x="21" y="37" width="13" height="3" rx="1.5" fill="#FFF0D4"/>
+    <rect x="21" y="73" width="13" height="3" rx="1.5" fill="#A5672E"/>
+
+    <rect x="41" y="38" width="9" height="38" rx="2" fill="url(#pillarGrad1)"/>
+    <rect x="39" y="37" width="13" height="3" rx="1.5" fill="#FFF0D4"/>
+    <rect x="39" y="73" width="13" height="3" rx="1.5" fill="#A5672E"/>
+
+    <rect x="70" y="38" width="9" height="38" rx="2" fill="url(#pillarGrad1)"/>
+    <rect x="68" y="37" width="13" height="3" rx="1.5" fill="#FFF0D4"/>
+    <rect x="68" y="73" width="13" height="3" rx="1.5" fill="#A5672E"/>
+
+    <rect x="88" y="38" width="9" height="38" rx="2" fill="url(#pillarGrad1)"/>
+    <rect x="86" y="37" width="13" height="3" rx="1.5" fill="#FFF0D4"/>
+    <rect x="86" y="73" width="13" height="3" rx="1.5" fill="#A5672E"/>
+
+    <path d="M16 76H104V81C104 81.5 103.5 82 103 82H17C16.5 82 16 81.5 16 81V76Z" fill="url(#baseGrad1)"/>
+    <path d="M12 82H108V88C108 88.5 107.5 89 107 89H13C12.5 89 12 88.5 12 88V82Z" fill="#A5672E"/>
+  </g>
+</svg>
+
+          </div>
+        </div>
+
+        <!-- 2 Stat Kartasi: Darslar soni & Ustozlar faolligi -->
+        <div class="panel-stats-grid-2">
+          <div class="panel-stat-box">
+            <div class="stat-box-content">
+              <span class="stat-box-label">Darslar soni</span>
+              <h2 class="stat-box-num" id="dashLessonsCount">48,364</h2>
+            </div>
+            <div class="stat-box-icon icon-blue">
+              <i class="fa-solid fa-chart-simple"></i>
+            </div>
+          </div>
+          
+          <div class="panel-stat-box">
+            <div class="stat-box-content">
+              <span class="stat-box-label">Ustozlar faolligi</span>
+              <h2 class="stat-box-num" id="dashTutorsActivity">46.2k</h2>
+            </div>
+            <div class="stat-box-icon icon-cyan">
+              <i class="fa-solid fa-user-group"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 Grafik Bloklari: Oylik statistika & Oyillar soni -->
+        <div class="panel-charts-grid-2">
+          <div class="panel-card chart-card">
+            <div class="card-header-clean">
+              <h3 class="panel-card-title">Oylik statistika</h3>
+            </div>
+            <div class="chart-bars-wrap">
+              <div class="chart-bar-item">
+                <span class="bar-val">2.7k</span>
+                <div class="bar-pillar-track"><div class="bar-pillar" style="height: 28%;"></div></div>
+                <span class="bar-label">Jan</span>
+              </div>
+              <div class="chart-bar-item">
+                <span class="bar-val">15.5k</span>
+                <div class="bar-pillar-track"><div class="bar-pillar" style="height: 60%;"></div></div>
+                <span class="bar-label">Feb</span>
+              </div>
+              <div class="chart-bar-item">
+                <span class="bar-val">5.1k</span>
+                <div class="bar-pillar-track"><div class="bar-pillar" style="height: 38%;"></div></div>
+                <span class="bar-label">Mar</span>
+              </div>
+              <div class="chart-bar-item">
+                <span class="bar-val">5.5k</span>
+                <div class="bar-pillar-track"><div class="bar-pillar" style="height: 42%;"></div></div>
+                <span class="bar-label">Apr</span>
+              </div>
+              <div class="chart-bar-item active-bar">
+                <span class="bar-val">46.2k</span>
+                <div class="bar-pillar-track"><div class="bar-pillar highlight" style="height: 95%;"></div></div>
+                <span class="bar-label">Des</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-card chart-card">
+            <div class="card-header-clean">
+              <h3 class="panel-card-title">Oyillar soni</h3>
+            </div>
+            <div class="chart-line-wrap">
+              <svg class="smooth-line-svg" viewBox="0 0 400 160" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="lineGradSchool" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.45"/>
+                    <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path d="M 0,130 C 50,115 80,95 120,68 C 160,38 200,90 250,48 C 300,12 350,60 400,18 L 400,160 L 0,160 Z" fill="url(#lineGradSchool)"/>
+                <path d="M 0,130 C 50,115 80,95 120,68 C 160,38 200,90 250,48 C 300,12 350,60 400,18" fill="none" stroke="#38bdf8" stroke-width="4.5" stroke-linecap="round"/>
+              </svg>
+              <div class="line-axis-labels">
+                <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Des</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ===================================================================
+           SUB-PANEL 2: 3D GRADIENT (O'QUV KO'RSATKICHLARI)
+           =================================================================== -->
+      <section id="3d-gradient-view" class="view-section">
+        
+        <div class="subpanel-back-bar">
+          <button class="back-to-main-btn" onclick="switchView('bosh-panel')">
+            <i class="fa-solid fa-arrow-left"></i> Boshqaruv Paneliga qaytish
+          </button>
+        </div>
+
+        <div class="panel-hero-banner hero-report">
+          <div class="hero-3d-illustration">
+            
+<svg width="112" height="90" viewBox="0 0 120 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="capGradNew" x1="45" y1="12" x2="85" y2="50" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#818CF8"/>
+      <stop offset="50%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#4338CA"/>
+    </linearGradient>
+    <linearGradient id="tasselGradNew" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FDE047"/>
+      <stop offset="100%" stop-color="#EAB308"/>
+    </linearGradient>
+  </defs>
+  <g filter="drop-shadow(0px 8px 12px rgba(0,0,0,0.35))">
+    <path d="M60 16L98 32L60 48L22 32L60 16Z" fill="url(#capGradNew)"/>
+    <path d="M38 39V48C38 54 48 59 60 59C72 59 82 54 82 48V39C75 43 68 45 60 45C52 45 45 43 38 39Z" fill="#3730A3"/>
+    
+    <circle cx="60" cy="32" r="3.5" fill="#FEF08A"/>
+    <path d="M60 32C68 32 75 38 78 50" stroke="url(#tasselGradNew)" stroke-width="3" stroke-linecap="round"/>
+    <rect x="76" y="49" width="5" height="10" rx="2" fill="#FACC15"/>
+  </g>
+</svg>
+
+          </div>
+        </div>
+
+        <div class="reports-grid-layout">
+          <div class="panel-card student-progress-card">
+            <div class="card-header-flex">
+              <h3 class="panel-card-title">O'quvchilarning fani bo'yicha o'zlashtirishi</h3>
+              <div class="subject-tags-row">
+                <span class="subject-tag tag-math">Matematika - 85%</span>
+                <span class="subject-tag tag-physics">Fizika - 90%</span>
+              </div>
+            </div>
+            
+            <div class="multi-line-chart-wrap">
+              <svg class="smooth-line-svg" viewBox="0 0 500 180" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="mathGrad2" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.38"/>
+                    <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+                  </linearGradient>
+                  <linearGradient id="physGrad2" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#818cf8" stop-opacity="0.38"/>
+                    <stop offset="100%" stop-color="#818cf8" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path d="M 0,150 Q 80,125 150,85 T 300,65 T 420,45 T 500,25 L 500,180 L 0,180 Z" fill="url(#mathGrad2)"/>
+                <path d="M 0,150 Q 80,125 150,85 T 300,65 T 420,45 T 500,25" fill="none" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/>
+                <path d="M 0,165 Q 90,138 160,105 T 310,55 T 430,30 T 500,15 L 500,180 L 0,180 Z" fill="url(#physGrad2)"/>
+                <path d="M 0,165 Q 90,138 160,105 T 310,55 T 430,30 T 500,15" fill="none" stroke="#818cf8" stroke-width="3.5" stroke-dasharray="5 5" stroke-linecap="round"/>
+              </svg>
+              <div class="line-axis-labels">
+                <span>Fan</span><span>Fan</span><span>Mar</span><span>Jun</span><span>Sep</span><span>Nov</span><span>Des</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="reports-right-col">
+            <div class="panel-card rating-card">
+              <h3 class="panel-card-title">O'zlashtirish</h3>
+              <div class="rating-percents-row">
+                <div class="rating-num-box">
+                  <span class="rating-big-num">70%</span>
+                  <div class="rating-bar-bg"><div class="rating-bar-fill" style="width: 70%;"></div></div>
+                </div>
+                <div class="rating-num-box">
+                  <span class="rating-big-num highlight">90%</span>
+                  <div class="rating-bar-bg"><div class="rating-bar-fill" style="width: 90%;"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-card attendance-gauge-card">
+              <h3 class="panel-card-title">Davomatga</h3>
+              <div class="donut-chart-box">
+                <svg class="donut-svg" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="40" class="donut-bg-ring"/>
+                  <circle cx="50" cy="50" r="40" class="donut-fill-ring" stroke-dasharray="216 251" stroke-dashoffset="0"/>
+                </svg>
+                <div class="donut-center-text">
+                  <span class="donut-val">86%</span>
+                  <span class="donut-sub">davomat</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ===================================================================
+           SUB-PANEL 3: HISOBOT KARTASI (MOLIYA & TO'LOVLAR)
+           =================================================================== -->
+            <section id="hisobot-kartasi-view" class="view-section">
+        
+        <div class="subpanel-back-bar">
+          <button class="back-to-main-btn" onclick="switchView('bosh-panel')">
+            <i class="fa-solid fa-arrow-left"></i> Boshqaruv Paneliga qaytish
+          </button>
+        </div>
+
+        <!-- 2 Stat Kartasi: Jami tushumlar & Qarzdorlik -->
+        <div class="panel-stats-grid-2">
+          <div class="panel-stat-box">
+            <div class="stat-box-content">
+              <span class="stat-box-label">Jami tushumlar</span>
+              <h2 class="stat-box-num text-emerald" id="financeTotalIncome">35,460,000 UZS</h2>
+            </div>
+            <div class="stat-box-icon icon-emerald">
+              <i class="fa-solid fa-money-bill-wave"></i>
+            </div>
+          </div>
+          
+          <div class="panel-stat-box">
+            <div class="stat-box-content">
+              <span class="stat-box-label">Qarzdorlik</span>
+              <h2 class="stat-box-num text-debt" id="financeTotalDebt">1 200 000 UZS</h2>
+            </div>
+            <div class="stat-box-icon icon-rose">
+              <i class="fa-solid fa-clock-rotate-left"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- TEPADAGI 2 TA TUGMA: MAKTAB VA REPETITOR -->
+        <div class="finance-mode-tabs">
+          <button class="finance-mode-btn active" id="btnFinanceSchoolMode" onclick="switchFinanceMode('school')">
+            <i class="fa-solid fa-school"></i> <span>Maktab to'lovlari</span>
+          </button>
+          <button class="finance-mode-btn" id="btnFinanceTutorMode" onclick="switchFinanceMode('tutor')">
+            <i class="fa-solid fa-graduation-cap"></i> <span>Repetitor & To'garaklar</span>
+          </button>
+        </div>
+
+        <!-- 1. Sinflar yoki To'garaklar Kartalari Ro'yxati -->
+        <div id="financeListContainer">
+          <!-- JS dinamik to'ldiradi -->
+        </div>
+
+        <!-- 2. Tanlangan Sinf yoki To'garak O'quvchilari Detallari -->
+        <div id="financeDetailContainer" style="display: none;">
+          <!-- JS dinamik to'ldiradi -->
+        </div>
+
+      </section>
+
+      <!-- ===================================================================
+           SUB-PANEL 4: MAKTAB HISOBOTI (O'QUVCHILAR BAZASI)
+           =================================================================== -->
+      <section id="maktab-hisoboti-view" class="view-section">
+        
+        <div class="subpanel-back-bar">
+          <button class="back-to-main-btn" onclick="switchView('bosh-panel')">
+            <i class="fa-solid fa-arrow-left"></i> Boshqaruv Paneliga qaytish
+          </button>
+        </div>
+
+        <div class="panel-header-bar">
+          <div>
+            <h2 class="panel-main-title">Maktab hisoboti — O'quvchilar bazasi</h2>
+            <p class="panel-sub-title" id="studentsCountSubtitle">O'quvchilar bazasi (21 ta)</p>
+          </div>
+          <div class="panel-actions-row">
+            <div class="panel-inline-search">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="studentsSearchInput" placeholder="O'quvchi qidirish..." oninput="filterStudentsTable(this.value)">
+            </div>
+            <button class="btn-primary" onclick="openAddStudentModal()">
+              <i class="fa-solid fa-user-plus"></i> Yangi O'quvchi
+            </button>
+          </div>
+        </div>
+
+        <div class="panel-card table-panel-card">
+          <div class="table-clean-wrap">
+            <table class="panel-clean-table">
+              <thead>
+                <tr>
+                  <th>O'quvchilar</th>
+                  <th>Sinf / O'quv filiali</th>
+                  <th>Ota-onalar telefoni</th>
+                  <th style="text-align: right;">Harakat</th>
+                </tr>
+              </thead>
+              <tbody id="studentsBaseTableBody">
+                <!-- JS to'ldiradi -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ===================================================================
+           SUB-PANEL 5: HISOBOTLAR XARITASI (GURUHLAR)
+           =================================================================== -->
+      <section id="hisobotlar-xaritasi-view" class="view-section">
+        
+        <div class="subpanel-back-bar">
+          <button class="back-to-main-btn" onclick="switchView('bosh-panel')">
+            <i class="fa-solid fa-arrow-left"></i> Boshqaruv Paneliga qaytish
+          </button>
+        </div>
+
+        <div class="groups-header-banner">
+          <div class="groups-header-text">
+            <h2 class="panel-main-title">Repetitorlar</h2>
+            <p class="panel-sub-title">Mavjud Guruhlar va Sinflar strukturasi</p>
+          </div>
+          <div class="groups-header-illustration">
+            
+<svg width="100" height="85" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="docGradBlue" x1="20" y1="10" x2="100" y2="90" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#60A5FA"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+    <linearGradient id="foldGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#BFDBFE"/>
+      <stop offset="100%" stop-color="#60A5FA"/>
+    </linearGradient>
+  </defs>
+  <g filter="drop-shadow(0px 8px 14px rgba(0,0,0,0.32))">
+    <path d="M32 14C32 10.6863 34.6863 8 38 8H74L92 26V84C92 87.3137 89.3137 90 86 90H38C34.6863 90 32 87.3137 32 84V14Z" fill="url(#docGradBlue)"/>
+    <path d="M74 8V24C74 25.1046 74.8954 26 76 26H92L74 8Z" fill="url(#foldGrad)"/>
+    <rect x="44" y="42" width="36" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.95"/>
+    <rect x="44" y="53" width="36" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.95"/>
+    <rect x="44" y="64" width="24" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.95"/>
+  </g>
+</svg>
+
+          </div>
+          <div class="groups-header-btn">
+            <button class="btn-primary" onclick="openAddGroupModal()">
+              <i class="fa-solid fa-plus"></i> Yangi Guruh
+            </button>
+          </div>
+        </div>
+
+        <div class="groups-cards-grid" id="groupsCardsContainer">
+          <!-- JS to'ldiradi -->
+        </div>
+
+      </section>
+
+      <!-- ===================================================================
+           SUB-PANEL 6: HISOBOTLAR TAHLILI (DAVOMAT)
+           =================================================================== -->
+            <section id="hisobotlar-tahlili-view" class="view-section">
+        
+        <div class="subpanel-back-bar">
+          <button class="back-to-main-btn" onclick="switchView('bosh-panel')">
+            <i class="fa-solid fa-arrow-left"></i> Boshqaruv Paneliga qaytish
+          </button>
+        </div>
+
+        <div class="attendance-header-banner">
+          <div class="attendance-header-text">
+            <h2 class="panel-main-title">Davomat Tizimi</h2>
+            <p class="panel-sub-title">Sinfni tanlang va o'quvchilar davomatini belgilang</p>
+          </div>
+          <div class="attendance-header-illustration">
+            <svg width="80" height="70" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M30 14C30 10.6863 32.6863 8 36 8H74L92 26V84C92 87.3137 89.3137 90 86 90H38C34.6863 90 32 87.3137 32 84V14Z" fill="#3B82F6"/>
+              <circle cx="62" cy="56" r="18" fill="#10B981"/>
+              <path d="M54 56L60 62L70 50" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 1. Barcha Sinflar Kartalari Ro'yxati -->
+        <div id="attendanceClassesListContainer">
+          <!-- JS dinamik to'ldiradi -->
+        </div>
+
+        <!-- 2. Tanlangan Sinf O'quvchilari Davomat Ro'yxati -->
+        <div id="attendanceClassDetailContainer" style="display: none;">
+          <!-- JS dinamik to'ldiradi -->
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ==================== MOBIL PASTKI NAVIGATSIYA ==================== -->
+  <nav class="mobile-bottom-nav" id="mobileBottomNav">
+    <button class="bottom-nav-item active" data-view="bosh-panel" onclick="switchView('bosh-panel')">
+      <i class="fa-regular fa-circle-dot"></i>
+      <span>Bosh panel</span>
+    </button>
+    <button class="bottom-nav-item" data-view="maktab-faoliyati-view" onclick="switchView('maktab-faoliyati-view')">
+      <i class="fa-solid fa-school"></i>
+      <span>Faoliyat</span>
+    </button>
+    <button class="bottom-nav-item" data-view="3d-gradient-view" onclick="switchView('3d-gradient-view')">
+      <i class="fa-solid fa-graduation-cap"></i>
+      <span>Statistika</span>
+    </button>
+    <button class="bottom-nav-item" data-view="hisobot-kartasi-view" onclick="switchView('hisobot-kartasi-view')">
+      <i class="fa-solid fa-file-invoice-dollar"></i>
+      <span>To'lovlar</span>
+    </button>
+    <button class="bottom-nav-item" data-view="maktab-hisoboti-view" onclick="switchView('maktab-hisoboti-view')">
+      <i class="fa-solid fa-users"></i>
+      <span>O'quvchilar</span>
+    </button>
+    <button class="bottom-nav-item" data-view="hisobotlar-tahlili-view" onclick="switchView('hisobotlar-tahlili-view')">
+      <i class="fa-solid fa-chart-column"></i>
+      <span>Sinflar</span>
+    </button>
+  </nav>
+
+</div>
+
+<!-- ==================== MODALLAR ==================== -->
+
+<!-- 1. Yangi O'quvchi Modali -->
+<div class="modal-overlay" id="addStudentModal">
+  <div class="modal-dialog standard-modal">
+    <div class="standard-modal-header">
+      <div class="modal-title-with-icon">
+        <i class="fa-solid fa-user-plus" style="color: var(--primary);"></i>
+        <h3>Yangi O'quvchi Qo'shish</h3>
+      </div>
+      <button class="modal-close-btn" onclick="closeAddStudentModal()">&times;</button>
+    </div>
+    <form id="addStudentForm" onsubmit="handleSaveNewStudent(event)">
+      <div class="standard-modal-body">
+        <div class="form-group">
+          <label>O'quvchi Ism-Familiyasi *</label>
+          <input type="text" id="newStudentName" required placeholder="Masalan: Sardor Rustamov">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Maktab Sinfi *</label>
+            <input type="text" id="newStudentClass" required placeholder="Masalan: 9-A sinf">
+          </div>
+          <div class="form-group">
+            <label>Ota-onasi Telefoni *</label>
+            <input type="text" id="newStudentParentPhone" required placeholder="+998 90 123 45 67">
+          </div>
+        </div>
+      </div>
+      <div class="standard-modal-footer">
+        <button type="button" class="btn-secondary" onclick="closeAddStudentModal()">Bekor qilish</button>
+        <button type="submit" class="btn-primary"><i class="fa-solid fa-check"></i> Saqlash</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 2. To'lov Modali -->
+<div class="modal-overlay" id="paymentModal">
+  <div class="modal-dialog standard-modal">
+    <div class="standard-modal-header">
+      <div class="modal-title-with-icon">
+        <i class="fa-solid fa-receipt" style="color: var(--accent-emerald);"></i>
+        <h3>To'lov Qabul Qilish</h3>
+      </div>
+      <button class="modal-close-btn" onclick="closePaymentModal()">&times;</button>
+    </div>
+    <form id="paymentForm" onsubmit="handleSavePayment(event)">
+      <div class="standard-modal-body">
+        <div class="form-group">
+          <label>O'quvchini Tanlang *</label>
+          <select id="paymentStudentSelect" required></select>
+        </div>
+        <div class="form-group">
+          <label>To'lov Summasi (UZS) *</label>
+          <input type="number" id="paymentAmountInput" required value="1200000">
+        </div>
+      </div>
+      <div class="standard-modal-footer">
+        <button type="button" class="btn-secondary" onclick="closePaymentModal()">Bekor qilish</button>
+        <button type="submit" class="btn-primary"><i class="fa-solid fa-check"></i> Qabul Qilish</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 3. Yangi Guruh Modali -->
+<div class="modal-overlay" id="addGroupModal">
+  <div class="modal-dialog standard-modal">
+    <div class="standard-modal-header">
+      <div class="modal-title-with-icon">
+        <i class="fa-solid fa-people-group" style="color: var(--accent-purple);"></i>
+        <h3>Yangi Guruh Ochish</h3>
+      </div>
+      <button class="modal-close-btn" onclick="closeAddGroupModal()">&times;</button>
+    </div>
+    <form id="addGroupForm" onsubmit="handleSaveNewGroup(event)">
+      <div class="standard-modal-body">
+        <div class="form-group">
+          <label>Guruh Nomi *</label>
+          <input type="text" id="newGroupName" required placeholder="Masalan: SAT Matematika Pro">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Dars Kunlari</label>
+            <input type="text" id="newGroupDays" value="Dush / Chor / Juma">
+          </div>
+          <div class="form-group">
+            <label>Ustoz</label>
+            <input type="text" id="newGroupTeacher" value="Javohir Rustamov">
+          </div>
+        </div>
+      </div>
+      <div class="standard-modal-footer">
+        <button type="button" class="btn-secondary" onclick="closeAddGroupModal()">Bekor qilish</button>
+        <button type="submit" class="btn-primary"><i class="fa-solid fa-check"></i> Ochish</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 4. Sozlamalar Modali -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal-dialog standard-modal">
+    <div class="standard-modal-header">
+      <div class="modal-title-with-icon">
+        <i class="fa-solid fa-sliders" style="color: var(--primary);"></i>
+        <h3>Tizim Sozlamalari</h3>
+      </div>
+      <button class="modal-close-btn" onclick="closeSettingsModal()">&times;</button>
+    </div>
+    <div class="standard-modal-body">
+      <div class="form-group">
+        <label>Maktab Nomi</label>
+        <input type="text" id="settingSchoolName" value="Ziyo Nur Xususiy Maktabi & Akademiyasi">
+      </div>
+    </div>
+    <div class="standard-modal-footer">
+      <button type="button" class="btn-secondary" onclick="closeSettingsModal()">Yopish</button>
+      <button type="button" class="btn-primary" onclick="saveSettings()"><i class="fa-solid fa-check"></i> Saqlash</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast konteyneri -->
+<div id="toastContainer" style="position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;"></div>
+
+<!-- JS Skriptlar -->
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
